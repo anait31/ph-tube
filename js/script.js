@@ -19,7 +19,6 @@ const loadCategories = (id) => {
             const buttons = document.getElementsByClassName('buttonsActive');
 
             for (let button of buttons) {
-                // console.log(button);
                 button.classList.remove('active');
             }
 
@@ -28,6 +27,7 @@ const loadCategories = (id) => {
             showVideos(data.category)
         });
 }
+
 
 const showCategories = (data) => {
     const categoryContainer = document.getElementById('catergories');
@@ -46,7 +46,6 @@ const showCategories = (data) => {
 const showVideos = (videos) => {
     const cardContainer = document.getElementById('car-container');
     cardContainer.innerHTML = "";
-    // console.log(videos)
     if(!videos.length) {
         cardContainer.innerHTML = `
         <div class="h-[400px] w-full col-span-4  text-center">
