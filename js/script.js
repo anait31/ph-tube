@@ -12,16 +12,21 @@ const getVideos = () => {
         .then(data => showVideos(data.videos));
 }
 
-// const loadCategories = (id) => {
-//     fetch(`https://openapi.programming-hero.com/api/phero-tube/category/${id}`)
-//         .then(res => res.json())
-//         .then(data => showVideos(data.category));
-// }
-
 const loadCategories = (id) => {
     fetch(`https://openapi.programming-hero.com/api/phero-tube/category/${id}`)
         .then(res => res.json())
-        .then(data => showVideos(data.category));
+        .then(data => {
+            const buttons = document.getElementsByClassName('buttonsActive');
+
+            for (let button of buttons) {
+                // console.log(button);
+                button.classList.remove('active');
+            }
+
+            const activeBtn = document.getElementById(`btn-${id}`);
+            activeBtn.classList.add('active');
+            showVideos(data.category)
+        });
 }
 
 const showCategories = (data) => {
@@ -30,7 +35,7 @@ const showCategories = (data) => {
         const div = document.createElement('div');
         categoryContainer.classList = 'flex justify-center gap-4'
         div.innerHTML = `
-        <button onclick="loadCategories(${category.category_id})" class ="btn">${category.category}</button>
+        <button id="btn-${category.category_id}" " onclick="loadCategories(${category.category_id})" class ="btn buttonsActive">${category.category}</button>
         `
         categoryContainer.appendChild(div);
 
@@ -43,7 +48,6 @@ const showVideos = (videos) => {
     cardContainer.innerHTML = "";
     // console.log(videos)
     if(!videos.length) {
-        // cardContainer.classList.remove('grid')
         cardContainer.innerHTML = `
         <div class="h-[400px] w-full col-span-4  text-center">
             <img class=" w-[250px] my-12 mx-auto" src="../assets/Icon.png" />
