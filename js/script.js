@@ -6,8 +6,8 @@ const getCategories = () => {
         .then(data => showCategories(data.categories));
 }
 
-const getVideos = () => {
-    fetch('https://openapi.programming-hero.com/api/phero-tube/videos')
+const getVideos = (searchText = "") => {
+    fetch(`https://openapi.programming-hero.com/api/phero-tube/videos?title=${searchText}`)
         .then(res => res.json())
         .then(data => showVideos(data.videos));
 }
@@ -28,6 +28,25 @@ const loadCategories = (id) => {
         });
 }
 
+const loadVideoDetails = async (vidoeId) => {
+    const url = `https://openapi.programming-hero.com/api/phero-tube/video/${vidoeId}`;
+    const res = await fetch(url);
+    const data = await res.json();
+    displayDetails(data.video)
+}
+
+const displayDetails = (video) => {
+
+    document.getElementById('customModal').showModal();
+
+    const showDetails = document.getElementById('show-details');
+        showDetails.innerHTML = `
+        <img class="w-full mb-3" src=${video.thumbnail} />
+        <p>${video.description}</p>
+        
+        `
+}
+
 
 const showCategories = (data) => {
     const categoryContainer = document.getElementById('catergories');
@@ -39,6 +58,8 @@ const showCategories = (data) => {
         `
         categoryContainer.appendChild(div);
 
+        
+
     })
 
 }
@@ -46,7 +67,7 @@ const showCategories = (data) => {
 const showVideos = (videos) => {
     const cardContainer = document.getElementById('car-container');
     cardContainer.innerHTML = "";
-    if(!videos.length) {
+    if (!videos.length) {
         cardContainer.innerHTML = `
         <div class="h-[400px] w-full col-span-4  text-center">
             <img class=" w-[250px] my-12 mx-auto" src="../assets/Icon.png" />
@@ -77,7 +98,8 @@ const showVideos = (videos) => {
                     </div>
                     <p>${video.others.views} Views</p>
                 </div>
-            </div>
+                </div>
+                <button onclick="loadVideoDetails('${video?.video_id}')" class="btn btn-sm ml-3 btn-error text-white">Details</button>
         `
 
         cardContainer.appendChild(div);
@@ -87,7 +109,9 @@ const showVideos = (videos) => {
 
 
 
-
+document.getElementById('search-input').addEventListener('keyup', (e) => {
+    getVideos(e.target.value);
+})
 
 getCategories();
 getVideos();
